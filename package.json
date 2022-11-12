@@ -1,0 +1,29 @@
+{
+  "name": "open-processing-backup",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frank890417/openprocessing-backup.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frank890417/openprocessing-backup/issues"
+  },
+  "homepage": "https://github.com/frank890417/openprocessing-backup#readme",
+  "dependencies": {
+    "decompress": "^4.2.1",
+    "dotenv": "^16.0.3",
+    "node-fetch": "^3.3.0",
+    "puppeteer": "^19.2.2",
+    "puppeteer-extra": "^3.3.4",
+    "request": "^2.88.2"
+  }
+}
