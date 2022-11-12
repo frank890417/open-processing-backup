@@ -93,13 +93,17 @@ async function login() {
         page.click('#joinModal_submitButton'),
         page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
     ]);
-    return { browser, page }
+    let userUrl = page.url()
+    let userId = userUrl.split("/").slice(-1)[0]
+    console.log("logged in id: ", userId)
+    return { browser, page, userId }
 }
 
 
 async function main() {
-    let { browser, page } = await login()
-
+    let { browser, page, userId } = await login()
+    // apiUrl = `https://www.openprocessing.org/api/user/${process.env.USERID}/sketchs.json`
+    apiUrl = `https://www.openprocessing.org/api/user/${process.env.USERID || userId}/sketchs.json`
     fs.rmSync("sketches", { recursive: true, force: true });
     makeDir("sketches")
     fetch(apiUrl)

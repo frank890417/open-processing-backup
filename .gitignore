@@ -2,3 +2,5 @@ node_modules
 sketches
 data.json
 .env
+backup
+.DS_Store
