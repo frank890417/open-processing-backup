@@ -40,7 +40,7 @@ function makeDir(dir) {
 }
 let __dirname = "./sketches"
 console.log(__dirname)
-let apiUrl = `https://www.openprocessing.org/api/user/139364/sketchs.json`
+let apiUrl = `https://www.openprocessing.org/api/user/${process.env.USERID}/sketchs.json`
 
 function getThumbnail(item) {
     return `https://openprocessing-usercontent.s3.amazonaws.com/thumbnails/visualThumbnail${item.visualID}@2x.jpg`
