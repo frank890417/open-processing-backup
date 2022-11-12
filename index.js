@@ -109,45 +109,50 @@ async function main() {
             fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(data, null, 2));
             let visuals = data.user.visuals
             for (let i = 0; i < visuals.length; i++) {
-                let visual = visuals[i]
-                let id = visual.visualID
-                let title = visual.title
-                let coverUrl = getThumbnail(visual)
-                let zipUrl = getZipUrl(visual)
-                let sketchDirName = `[${id}] ${title}`
-                // let sketchPageUrl = `https://openprocessing.org/sketch/${id}/embed/`
-                console.log(`Downloading (${i}/${visuals.length})`, id, title)
-                makeDir(path.join(__dirname, sketchDirName))
-                fs.writeFileSync(path.join(path.join(__dirname, sketchDirName), 'info.json'), JSON.stringify(visual, null, 2));
+                try {
 
-                // console.log(coverUrl)
-                await downloadFile(coverUrl, path.join(__dirname, sketchDirName, `${id}.jpg`))
+                    let visual = visuals[i]
+                    let id = visual.visualID
+                    let title = visual.title
+                    let coverUrl = getThumbnail(visual)
+                    let zipUrl = getZipUrl(visual)
+                    let sketchDirName = `[${id}] ${title}`
+                    // let sketchPageUrl = `https://openprocessing.org/sketch/${id}/embed/`
+                    console.log(`Downloading (${i}/${visuals.length})`, id, title)
+                    makeDir(path.join(__dirname, sketchDirName))
+                    fs.writeFileSync(path.join(path.join(__dirname, sketchDirName), 'info.json'), JSON.stringify(visual, null, 2));
 
-                // console.log(sketchPageUrl)
-                // await downloadFile(sketchPageUrl, path.join(__dirname, sketchDirName, `${id}.html`))
-                const workPage = await browser.newPage();
-                await workPage.goto(`https://openprocessing.org/sketch/${id}`, { waitUntil: 'domcontentloaded' })
+                    // console.log(coverUrl)
+                    await downloadFile(coverUrl, path.join(__dirname, sketchDirName, `${id}.jpg`))
 
-                const client = await workPage.target().createCDPSession()
-                await client.send('Page.setDownloadBehavior', {
-                    behavior: 'allow',
-                    downloadPath: path.join(__dirname, sketchDirName)
-                });
+                    // console.log(sketchPageUrl)
+                    // await downloadFile(sketchPageUrl, path.join(__dirname, sketchDirName, `${id}.html`))
+                    const workPage = await browser.newPage();
+                    await workPage.goto(`https://openprocessing.org/sketch/${id}`, { waitUntil: 'domcontentloaded' })
 
-                await sleep(200)
-                // console.log("open panel")
-                await workPage.click('[data-target="#shareSidePanel"]')
-                await sleep(200)
-                // console.log("click download link")
-                await workPage.click('#share_download a')
-                let downloadedZipFile = path.join(__dirname, sketchDirName, `sketch${id}.zip`)
-                await awaitFileDownloaded(downloadedZipFile)
-                // await sleep(500)
-                await decompress(downloadedZipFile, path.join(__dirname, sketchDirName, `sketch${id}`))
-                await workPage.close()
+                    const client = await workPage.target().createCDPSession()
+                    await client.send('Page.setDownloadBehavior', {
+                        behavior: 'allow',
+                        downloadPath: path.join(__dirname, sketchDirName)
+                    });
 
-                // await workPage.goto(zipUrl, { waitUntil: 'networkidle0' });
+                    await sleep(200)
+                    // console.log("open panel")
+                    await workPage.click('[data-target="#shareSidePanel"]')
+                    await sleep(200)
+                    // console.log("click download link")
+                    await workPage.click('#share_download a')
+                    let downloadedZipFile = path.join(__dirname, sketchDirName, `sketch${id}.zip`)
+                    await awaitFileDownloaded(downloadedZipFile)
+                    // await sleep(500)
+                    await decompress(downloadedZipFile, path.join(__dirname, sketchDirName, `sketch${id}`))
+                    await workPage.close()
 
+                    // await workPage.goto(zipUrl, { waitUntil: 'networkidle0' });
+
+                } catch (e) {
+                    console.log(e)
+                }
             }
         });
 
